@@ -21,11 +21,13 @@ Route::post('/postlogin', 'AuthController@postlogin');
 Route::group(['middleware' => ['auth', 'checkRole:Kurikulum']], function(){
 	Route::get('/kelola_akun', 'ViewManagementControl@kelola_akun');
 	Route::post('/simpan_akun', 'AkunController@create');
-	Route::get('/hapus_akun/{user}', 'AkunController@delete');
-	Route::get('/detail_akun','AkunController@detail');
+	Route::get('/detail_akun/{id}','AkunController@detail');
+	Route::get('/hapus_akun/{id}', 'AkunController@delete');
+	Route::post('/update_akun/{id}', 'AkunController@update');
 });
 Route::group(['middleware' => ['auth', 'checkRole:Guru,Kurikulum']], function(){
 	Route::get('/dashboard', 'AuthController@dashboard');
+	Route::post('/changepass/{id}', 'AkunController@changepass');
 });
 
 
