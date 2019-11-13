@@ -13,7 +13,11 @@
           <i class="fas fa-home"></i>
           <span>Dashboard</span></a>
       </li>
-      @if(auth()->user()->role == 'Kurikulum')
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url('/lihat_akun') }}">
+          <i class="fas fa-user"></i>
+          <span>Lihat Akun</span></a>
+      </li>
       <li class="nav-item active">
         <a class="nav-link" href="{{ url('/kelola_akun') }}">
           <i class="fas fa-users"></i>
@@ -29,7 +33,6 @@
           <i class="far fa-address-card"></i>
           <span>Kelola Kelas</span></a>
       </li>
-      @endif
       <hr class="sidebar-divider d-none d-md-block">
       <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
@@ -47,7 +50,7 @@
       </div>
     </div>
     <div class="col-lg-12 mb-4">
-      <a href="#" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i>Tambah Data</a>
+      <a href="#" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i> Tambah Data</a>
     </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -77,10 +80,20 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-4 col-form-label">Role</label>
-                <div class="col-sm-8">
+                <div class="col-sm-8" id="edit-type-wrapper">
                     <select id="inputState" class="form-control" name="role">
                       <option value="Guru">Guru</option>
                       <option value="Kurikulum">Kurikulum</option>
+                    </select>
+                </div>
+              </div>
+              <div class="form-group row mapel_select">
+                <label class="col-sm-4 col-form-label">Mapel</label>
+                <div class="col-sm-8">
+                    <select id="inputState" class="form-control" name="mapel">
+                      @foreach($mapel as $m)
+                      <option value="{{ $m->mapel }}">{{ $m->mapel }}</option>
+                      @endforeach
                     </select>
                 </div>
               </div>
@@ -97,7 +110,7 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="submit" class="btn btn-primary btn-block">Save</button>
+                <button type="submit" class="btn btn-success btn-block">Save</button>
               </div>
             </form>
           </div>
@@ -124,7 +137,7 @@
             <td>{{ $u->kd_guru }}</td>
             <td>{{ $u->name }}</td>
             <td>{{ $u->role }}</td>
-            <td class="text-center"><a href="{{ url('/detail_akun', $u->id) }}" class="btn btn-primary">Detail <i class="fa fa-search fa-lg"></i></a>  <a href="{{ url('/hapus_akun', $u->id) }}" class="btn btn-danger">Hapus <i class="far fa-trash-alt fa-lg"></i></a></td>
+            <td class="text-center"><a href="{{ url('/detail_akun', $u->id) }}" class="btn btn-primary">Detail <i class="fa fa-search fa-lg"></i></a>  <a href="{{ url('/hapus_akun', $u->kd_guru) }}" class="btn btn-danger">Hapus <i class="far fa-trash-alt fa-lg"></i></a></td>
           </tr>
           @endforeach
         </tbody>
@@ -132,4 +145,17 @@
     </div>
   </div>
 </div>
+@endsection
+@section('script')
+<script type="text/javascript">
+$(document).ready( function() {
+  $('#edit-type-wrapper select').change(function() {
+     if($(this).val() == "Kurikulum"){
+       $('.mapel_select').hide();
+     } else {
+       $('.mapel_select').show();
+     }
+  });
+});
+</script>
 @endsection

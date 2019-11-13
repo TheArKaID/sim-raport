@@ -2,7 +2,7 @@
 @section('css')
 <style type="text/css">
   #card-welcome{
-    background-image: url(images/bg-2.jpg);
+    background-image: url('{{ asset('images/bg-2.jpg') }}');
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
@@ -31,6 +31,11 @@
           <i class="fas fa-home"></i>
           <span>Dashboard</span></a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url('/lihat_akun') }}">
+          <i class="fas fa-user"></i>
+          <span>Lihat Akun</span></a>
+      </li>
       @if(auth()->user()->role == 'Kurikulum')
       <li class="nav-item">
         <a class="nav-link" href="{{ url('/kelola_akun') }}">
@@ -46,6 +51,13 @@
         <a class="nav-link" href="{{ url('/') }}">
           <i class="far fa-address-card"></i>
           <span>Kelola Kelas</span></a>
+      </li>
+      @endif
+      @if(auth()->user()->role == 'Guru')
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url('/kelola_nilai', auth()->user()->kd_guru) }}">
+          <i class="fas fa-calculator"></i>
+          <span>Kelola Nilai</span></a>
       </li>
       @endif
       <hr class="sidebar-divider d-none d-md-block">
@@ -66,8 +78,25 @@
       </div>
   </div>
   <div class="row">
+    @if(auth()->user()->role == 'Kurikulum')
     <div class="col-xl-4 col-md-6 mb-4">
-      <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2 text-center">
+              <a href="{{ url('kelola_kelas') }}">
+                Lihat Akun
+              </a>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-user fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2 text-center">
@@ -99,7 +128,7 @@
       </div>
     </div>
     <div class="col-xl-4 col-md-6 mb-4">
-      <div class="card border-left-danger shadow h-100 py-2">
+      <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2 text-center">
@@ -114,6 +143,41 @@
         </div>
       </div>
     </div>
+    @endif
+    @if(auth()->user()->role == 'Guru')
+    <div class="col-xl-6 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2 text-center">
+              <a href="{{ url('kelola_nilai') }}">
+                Lihat Akun
+              </a>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-user fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-6 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2 text-center">
+              <a href="{{ url('/kelola_nilai', auth()->user()->kd_guru) }}">
+                Kelola Nilai
+              </a>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calculator fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    @endif
 </div>
 </div>
 @endsection

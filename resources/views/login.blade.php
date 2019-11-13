@@ -16,7 +16,7 @@
     }
     .card-login{
       background-position: center;
-      background-image: url(images/bg-4.jpg);
+      background-image: url('{{ asset('images/bg-4.jpg')  }}');
       background-size: cover;
     }
   </style>
