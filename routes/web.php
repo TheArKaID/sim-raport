@@ -24,6 +24,8 @@ Route::group(['middleware' => ['auth', 'checkRole:Guru,Kurikulum']], function(){
 	Route::post('/changepass/{id}', 'AkunController@changepass');
 });
 Route::group(['middleware' => ['auth', 'checkRole:Kurikulum']], function(){
+	Route::get('/dataTableAkun', 'ViewManagementControl@dataTableAkun');
+	Route::get('/maksKode', 'ViewManagementControl@maksKode');
 	Route::get('/kelola_akun', 'ViewManagementControl@kelola_akun');
 	Route::post('/simpan_akun', 'AkunController@create');
 	Route::get('/detail_akun/{id}','AkunController@detail');
@@ -34,7 +36,13 @@ Route::group(['middleware' => ['auth', 'checkRole:Kurikulum']], function(){
 });
 Route::group(['middleware' => ['auth', 'checkRole:Guru']], function(){
 	Route::get('/kelola_nilai/{kd_guru}', 'NilaiController@dashboard_nilai');
-	Route::get('/detail_nilai/{kd_rombel}', 'NilaiController@detail_nilai');
+	Route::get('/detail_nilai/{kd_rombel}/{mapel}', 'NilaiController@detail_nilai');
+	Route::post('/input_kkm/{kd_guru}/{kd_rombel}/{mapel}', 'NilaiController@input_kkm');
+	Route::post('/update_kkm/{kd_guru}/{kd_rombel}/{mapel}', 'NilaiController@update_kkm');
+	Route::get('/kelola_nilai_siswa/{nis}/{kd_rombel}/{mapel}/{kkm}', 'NilaiController@kelola_nilai');
+	Route::post('/input_nilai/{nis}/{kd_rombel}/{mapel}/{kkm}', 'NilaiController@input_nilai');
+	Route::post('/update_nilai/{nis}/{kd_rombel}/{mapel}/{kkm}', 'NilaiController@update_nilai');
+
 });
 
 

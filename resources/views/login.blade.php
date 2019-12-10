@@ -11,17 +11,22 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   <link href="css/sb-admin-2.min.css" rel="stylesheet">
   <style type="text/css">
+    body{
+      background-image: url('{{ asset('images/BackgroundSample.jpg') }}');
+      background-size: cover;
+      background-position: center;
+    }
     .top-margin{
       margin-top: 70px;
     }
     .card-login{
       background-position: center;
-      background-image: url('{{ asset('images/bg-4.jpg')  }}');
+      background-image: url('{{ asset('images/loginimage.jpg')  }}');
       background-size: cover;
     }
   </style>
 </head>
-<body class="bg-gradient-success">
+<body class="">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-xl-10 col-lg-12 col-md-9 top-margin">
@@ -48,11 +53,11 @@
                         <label class="custom-control-label" for="customCheck">Remember Me</label>
                       </div>
                     </div>
-                    <button class="btn btn-success btn-user btn-block" type="submit">Login</button>
+                    <button class="btn btn-user btn-block" style="background-color: #9800e1; color: white;" type="submit">Login</button>
                   </form>
                   <hr>
                   <div class="text-center">
-                    <a class="small" href="#">Forgot Password?</a>
+                    <a class="small" href="#" style="color: #4e00e1;">Forgot Password?</a>
                   </div>
                 </div>
               </div>

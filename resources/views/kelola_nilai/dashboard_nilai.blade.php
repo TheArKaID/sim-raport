@@ -3,7 +3,7 @@
 <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/dashboard')}}">
         <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-file-alt"></i>
+          <!-- <i class="fas fa-file-alt"></i> -->
         </div>
         <div class="sidebar-brand-text mx-3">SIM RAPORT</div>
       </a>
@@ -47,7 +47,7 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2 text-center">
-              <a href="{{ url('/detail_nilai', $kelas->kd_rombel) }}">
+              <a href="{{ url('/detail_nilai/'.$kelas->kd_rombel.'/'.auth()->user()->mapel) }}">
                 {{ $kelas->rombel }}
               </a>
             </div>

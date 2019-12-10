@@ -32,55 +32,22 @@
 @section('isi')
 <div class="container-fluid">
   <div class="row">
-    <div class="col-lg-12 mb-4"><a href="{{ url('/kelola_nilai', auth()->user()->kd_guru) }}" class="btn btn-success">Kembali</a></div>
+    <div class="col-lg-12 mb-4"><a href="{{ url('/detail_nilai/'.$kd_rombel.'/'.auth()->user()->mapel) }}" class="btn btn-success">Kembali</a></div>
   </div>
   <div class="row">
-    <div class="col-lg-12 mb-3">
+    <div class="col-lg-12 mb-4">
       <div class="card bg-success text-white shadow" id="card-welcome">
         <div class="card-body text-center">
-          <h3>Kelola Nilai Siswa</h3>
+          <h3>
+            @foreach($identitas as $i)
+              {{ $i->nis . ' - ' . $i->nama }}
+            @endforeach
+          </h3>
         </div>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-sm-4 mb-4">
-      @if($cek_kkm == 0)
-      <form method="POST" action="{{ url('/input_kkm/'.auth()->user()->kd_guru.'/'.$kd_rombel.'/'.auth()->user()->mapel) }}">
-        @csrf
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label" style="font-weight: bold;">KKM</label>
-          <div class="col-sm-4">
-            <input type="number" id="nilaiKkm" class="form-control" name="kkm">
-          </div>
-          <div class="col-sm-4">
-            <button class="btn btn-success" type="submit">Simpan</button>
-          </div>
-          <div class="col-sm-2"></div>
-        </div>
-      </form>
-      @elseif($cek_kkm > 0)
-      <form method="POST" action="{{ url('/update_kkm/'.auth()->user()->kd_guru.'/'.$kd_rombel.'/'.auth()->user()->mapel) }}">
-        @csrf
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label" style="font-weight: bold;">KKM</label>
-          <div class="col-sm-4">
-            @foreach($tampil_kkm as $kkm)
-            <input type="number" id="nilaiKkm" class="form-control" name="kkm" value="{{ $kkm->kkm }}" readonly="">
-            @endforeach
-          </div>
-          <div class="col-sm-4">
-            <button class="btn btn-success" id="editKkm" type="button">Edit</button>
-            <button class="btn btn-success" id="simpanKkm" type="submit" hidden="">Simpan</button>
-          </div>
-          <div class="col-sm-2"></div>
-        </div>
-      </form>
-      @endif
-    </div>
-    <div class="col-sm-4"></div>
-  </div>
-<!--   <div class="row">
+  <!-- <div class="row">
     <div class="modal fade" id="editContent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -183,85 +150,119 @@
   </div> -->
   <div class="row">
     <div class="col-lg-12 mb-4">
-      <table class="table table-bordered" id="dataTable">
+      <table class="table table-bordered" id="myTable">
         <thead class="text-center">
           <tr>
             <th scope="col" class="bg-success" style="color: #fff;">#</th>
-            <th scope="col">NIS</th>
-            <th scope="col">Nama</th>
-            <th scope="col">Rayon</th>
-            <th scope="col">Rombel</th>
+            <th scope="col">UH 1</th>
+            <th scope="col">UH 2</th>
+            <th scope="col">UTS GANJIL</th>
+            <th scope="col">UH 3</th>
+            <th scope="col">UH 4</th>
+            <th scope="col">UAS</th>
+            <th scope="col">UH 5</th>
+            <th scope="col">UH 6</th>
+            <th scope="col">UTS GENAP</th>
+            <th scope="col">UH 7</th>
+            <th scope="col">UH 8</th>
+            <th scope="col">UKK</th>
             <th scope="col">Opsi</th>
           </tr>
         </thead>
         <tbody>
-          @foreach($daftar_siswa as $siswa)
-          <tr>
-            <th scope="row">{{ $loop->iteration }}</th>
-            <td>{{ $siswa->nis }}</td>
-            <td>{{ $siswa->nama }}</td>
-            <td>{{ $siswa->rayon }}</td>
-            <td>{{ $siswa->rombel }}</td>
+          @foreach($daftar_nilai as $nilai)
+          <tr class="text-center" id="table-nilai">
+            <th scope=""></th>
+            @if($nilai->uh1 >= $kkm)<td>{{ $nilai->uh1 }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uh1 }}</td>@endif
+            @if($nilai->uh2 >= $kkm)<td>{{ $nilai->uh2 }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uh2 }}</td>@endif
+            @if($nilai->uts1 >= $kkm)<td>{{ $nilai->uts1 }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uts1 }}</td>@endif
+            @if($nilai->uh3 >= $kkm)<td>{{ $nilai->uh3 }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uh3 }}</td>@endif
+            @if($nilai->uh4 >= $kkm)<td>{{ $nilai->uh4 }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uh4 }}</td>@endif
+            @if($nilai->uas >= $kkm)<td>{{ $nilai->uas }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uas }}</td>@endif
+            @if($nilai->uh5 >= $kkm)<td>{{ $nilai->uh5 }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uh5 }}</td>@endif
+            @if($nilai->uh6 >= $kkm)<td>{{ $nilai->uh6 }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uh6 }}</td>@endif
+            @if($nilai->uts2 >= $kkm)<td>{{ $nilai->uts2 }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uts2 }}</td>@endif
+            @if($nilai->uh7 >= $kkm)<td>{{ $nilai->uh7 }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uh7 }}</td>@endif
+            @if($nilai->uh8 >= $kkm)<td>{{ $nilai->uh8 }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->uh8 }}</td>@endif
+            @if($nilai->ukk >= $kkm)<td>{{ $nilai->ukk }}</td>
+            @else<td style="background-color: red; color: #fff;">{{ $nilai->ukk }}</td>@endif
             <td class="text-center">
-              @foreach($tampil_kkm as $kkm)
-              <a href="{{ url('/kelola_nilai_siswa/'. $siswa->nis . '/' . $kd_rombel . '/' . auth()->user()->mapel.'/'.$kkm->kkm) }}" class="btn btn-primary">Kelola Nilai</a>
-              @endforeach
+              <a href="#" id="editBtn" class="btn btn-primary">Ubah Nilai</a>
             </td>
           </tr>
           @endforeach
         </tbody>
+        <tr class="text-center" id="edit-nilai" hidden="">
+          @if($cek_isi > 0)
+          @foreach($daftar_nilai as $n)
+            <form method="POST" action="{{ url('/update_nilai/'.$nis.'/'.$kd_rombel.'/'.$mapel.'/'.$kkm) }}">
+              @csrf
+              <td></td>
+              <td><input type="input" style="width: 50px;" name="uh1" id="uh1" value="{{ $n->uh1 }}"></td>
+              <td><input type="input" style="width: 50px;" name="uh2" id="uh2" value="{{ $n->uh2 }}"></td>
+              <td><input type="input" style="width: 50px;" name="uts1" id="uts1" value="{{ $n->uts1 }}"></td>
+              <td><input type="input" style="width: 50px;" name="uh3" id="uh3" value="{{ $n->uh3 }}"></td>
+              <td><input type="input" style="width: 50px;" name="uh4" id="uh4" value="{{ $n->uh4 }}"></td>
+              <td><input type="input" style="width: 50px;" name="uas" id="uas" value="{{ $n->uas }}"></td>
+              <td><input type="input" style="width: 50px;" name="uh5" id="uh5" value="{{ $n->uh5 }}"></td>
+              <td><input type="input" style="width: 50px;" name="uh6" id="uh6" value="{{ $n->uh6 }}"></td>
+              <td><input type="input" style="width: 50px;" name="uts2" id="uts2" value="{{ $n->uts2 }}"></td>
+              <td><input type="input" style="width: 50px;" name="uh7" id="uh7" value="{{ $n->uh7 }}"></td>
+              <td><input type="input" style="width: 50px;" name="uh8" id="uh8" value="{{ $n->uh8 }}"></td>
+              <td><input type="input" style="width: 50px;" name="ukk" id="ukk" value="{{ $n->ukk }}"></td>
+              <td><button id="updateBtn" class="btn btn-primary" type="submit">Update</button></td>
+            </form>
+            @endforeach
+          </tr>
+          @else
+          <tr class="text-center" id="edit-nilai">
+            <form method="POST" action="{{ url('/input_nilai/'.$nis.'/'.$kd_rombel.'/'.$mapel.'/'.$kkm) }}">
+              @csrf
+              <td></td>
+              <td><input type="input" style="width: 50px;" name="uh1"></td>
+              <td><input type="input" style="width: 50px;" name="uh2"></td>
+              <td><input type="input" style="width: 50px;" name="uts1"></td>
+              <td><input type="input" style="width: 50px;" name="uh3"></td>
+              <td><input type="input" style="width: 50px;" name="uh4"></td>
+              <td><input type="input" style="width: 50px;" name="uas"></td>
+              <td><input type="input" style="width: 50px;" name="uh5"></td>
+              <td><input type="input" style="width: 50px;" name="uh6"></td>
+              <td><input type="input" style="width: 50px;" name="uts2"></td>
+              <td><input type="input" style="width: 50px;" name="uh7"></td>
+              <td><input type="input" style="width: 50px;" name="uh8"></td>
+              <td><input type="input" style="width: 50px;" name="ukk"></td>
+              <td><button id="updateBtn" class="btn btn-primary">Insert</button></td>
+            </form>
+          </tr>
+          @endif
       </table>
     </div>
   </div>
 @endsection
 @section('script')
 <script type="text/javascript">
-  $('#editKkm').click(function() {
-    $('#nilaiKkm').prop("readonly", false);
-    $('#simpanKkm').prop("hidden", false);
-    $('#editKkm').hide();
+  $
+
+  $(".table").on('click', '#editBtn', function(e){
+      $("#table-nilai").prop("hidden", true);
+      $("#edit-nilai").prop("hidden", false);
   });
+
+  $("#updateBtn").click(function(){
+      $("#table-nilai").prop("hidden", false);
+      $("#edit-nilai").prop("hidden", true);
+  });
+
 </script>
-<!-- <script type="text/javascript">
-  $('#editContent').on('show.bs.modal', function(e){
-      $(this).find('#nama').val($(e.relatedTarget).data('nama'));
-      $(this).find('#nis').val($(e.relatedTarget).data('nis'));
-      $('#exampleModalLabel').text($(this).find('#nis').val() +" - "+ $(this).find('#nama').val());
-      $("#updateBtn").hide();
-  });
-
-  $("#editBtn").click(function(){
-      $("#nilai1").prop("disabled", false);
-      $("#nilai2").prop("disabled", false);
-      $("#nilai3").prop("disabled", false);
-      $("#nilai4").prop("disabled", false);
-      $("#nilai5").prop("disabled", false);
-      $("#nilai6").prop("disabled", false);
-      $("#nilai7").prop("disabled", false);
-      $("#nilai8").prop("disabled", false);
-      $("#nilai9").prop("disabled", false);
-      $("#nilai10").prop("disabled", false);
-      $("#nilai11").prop("disabled", false);
-      $("#nilai12").prop("disabled", false);
-      $("#editBtn").hide();
-      $("#updateBtn").show();
-  });
-
-  $("#editClose").click(function(){
-      $("#nilai1").prop("disabled", true);
-      $("#nilai2").prop("disabled", true);
-      $("#nilai3").prop("disabled", true);
-      $("#nilai4").prop("disabled", true);
-      $("#nilai5").prop("disabled", true);
-      $("#nilai6").prop("disabled", true);
-      $("#nilai7").prop("disabled", true);
-      $("#nilai8").prop("disabled", true);
-      $("#nilai9").prop("disabled", true);
-      $("#nilai10").prop("disabled", true);
-      $("#nilai11").prop("disabled", true);
-      $("#nilai12").prop("disabled", true);
-      $("#updateBtn").hide();
-      $("#editBtn").show();
-  });
-</script> -->
 @endsection

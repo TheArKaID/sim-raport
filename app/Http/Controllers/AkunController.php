@@ -25,18 +25,17 @@ class AkunController extends Controller
             'password' => Hash::make($request['password']),
         ]);
 
-        return redirect('/kelola_akun');
+        echo "sukses";
     }
 
     //Menghapus Akun
     public function delete($id){
         DB::table('users')->where('kd_guru', '=', $id)->delete();
         DB::table('kelas_ajar')->where('kd_guru', '=', $id)->delete();
-        return redirect('/kelola_akun');
+        echo "sukses";
     }
 
-    //Lihat Akun
-    public function detail($id, Request $request){
+    public function detail_sample($id){
         $user = User::find($id);
         $mapel = Mapel::all();
         $kelas = CrudKelas::all();
@@ -44,8 +43,19 @@ class AkunController extends Controller
         $tingkat1 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 1)->get();
         $tingkat2 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 2)->get();
         $tingkat3 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 3)->get();
-        // $t_ajar = DB::table('rombel')->join('kelas_ajar', 'kelas_ajar.kd_rombel', '<>', 'rombel.kd_rombel')->select('rombel.kd_rombel', 'rombel.rombel')->groupBy('kd_rombel','rombel')->havingRaw('COUNT(*) > 2',[9])->get();
-        return view('kelola_akun.detail_akun', compact('user', 'mapel', 'tingkat1', 'tingkat2', 'tingkat3', 'kelas', 't_ajar'));
+        return view('kelola_akun.detail_akun', compact('user', 'mapel', 'kelas', 't_ajar', 'tingkat1', 'tingkat2', 'tingkat3'));
+    }
+
+    //Lihat Akun
+    public function detail($id){
+        $user = User::find($id);
+        $mapel = Mapel::all();
+        $kelas = CrudKelas::all();
+        $t_ajar = TabelAjar::all();
+        $tingkat1 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 1)->get();
+        $tingkat2 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 2)->get();
+        $tingkat3 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 3)->get();
+        return response()->json($user);
     }
 
     //Update Akun

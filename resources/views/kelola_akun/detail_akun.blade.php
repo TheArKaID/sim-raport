@@ -24,7 +24,7 @@
 <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/dashboard')}}">
         <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-file-alt"></i>
+          <!-- <i class="fas fa-file-alt"></i> -->
         </div>
         <div class="sidebar-brand-text mx-3">SIM RAPORT</div>
       </a>

@@ -1,11 +1,14 @@
 @extends('layouts/header')
 @section('css')
 <style type="text/css">
+  #btn-kelola .card{
+    
+  }
+  #btn-kelola a:hover{
+    text-decoration: none;
+  }
   #card-welcome{
-    background-image: url('{{ asset('images/bg-2.jpg') }}');
     background-size: cover;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
     background-position: center;
     padding-top: 100px;
     padding-bottom: 100px;
@@ -18,10 +21,10 @@
 </style>
 @endsection
 @section('nav')
-<ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-image: url('{{ asset('images/navbg.jpg')  }}');">
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/dashboard')}}">
         <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-file-alt"></i>
+          <!-- <i class="fas fa-file-alt"></i> -->
         </div>
         <div class="sidebar-brand-text mx-3">SIM RAPORT</div>
       </a>
@@ -70,92 +73,105 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-lg-12 mb-4">
-        <div class="card bg-success text-white shadow" id="card-welcome">
-          <div class="card-body text-center">
-            <h2>Welcome {{auth()->user()->name}}</h2>
+    @if(auth()->user()->mapel == 'Matematika')
+        <div class="card bg-success text-white shadow" id="card-welcome" style="
+    background-image: url('{{ asset('images/math3.jpg') }}');">
+    @elseif(auth()->user()->mapel == 'Indonesia')
+        <div class="card bg-success text-white shadow" id="card-welcome" style="
+    background-image: url('{{ asset('images/indo1.jpg') }}');">
+    @elseif(auth()->user()->mapel == 'Sejarah')
+        <div class="card bg-success text-white shadow" id="card-welcome" style="
+        background-image: url('{{ asset('images/history1.jpg') }}');">
+    @elseif(auth()->user()->mapel == 'Produktif')
+        <div class="card bg-success text-white shadow" id="card-welcome" style="
+        background-image: url('{{ asset('images/prod1.jpg') }}');">
+    @else
+        <div class="card text-white shadow" id="card-welcome" style="background-image: url('{{ asset('images/dashboardbg.jpg') }}');">
+    @endif
+          <div class="card-body text-left ml-4" style="margin-top: -30px; margin-bottom: -30px;">
+            <!-- <h2>Welcome {{auth()->user()->name}}</h2> -->
+            <p style="font-size: 20px;">Welcome</p><br>
+            <p style="font-size: 30px; font-weight: bold; margin-top: -40px;">{{auth()->user()->name}}</p><hr style="border-color: #fff;">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua.</p>
           </div>
         </div>
       </div>
   </div>
   <div class="row">
     @if(auth()->user()->role == 'Kurikulum')
-    <div class="col-xl-4 col-md-6 mb-4">
-      <div class="card border-left-success shadow h-100 py-2">
+    <div class="col-xl-4 col-md-6 mb-4" id="btn-kelola">
+      <a href="{{ url('kelola_kelas') }}" style="color: #7102cf; font-weight: bold;">
+      <div class="card shadow h-100 py-2" style="border-left-color: #7a00e2; border-left-width: 5px; background-image: url('{{ asset('img/btn1.png') }}'); background-position: center; background-size: cover;">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2 text-center">
-              <a href="{{ url('kelola_kelas') }}">
                 Lihat Akun
-              </a>
             </div>
             <div class="col-auto">
-              <i class="fas fa-user fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
       </div>
+      </a>
     </div>
-    <div class="col-xl-4 col-md-6 mb-4">
-      <div class="card border-left-success shadow h-100 py-2">
+    <div class="col-xl-4 col-md-6 mb-4" id="btn-kelola">
+      <a href="{{ url('/kelola_akun') }}" style="color: #7102cf; font-weight: bold;">
+      <div class="card shadow h-100 py-2" style="border-left-color: #7a00e2; border-left-width: 5px; background-image: url('{{ asset('img/btn2.png') }}'); background-position: center; background-size: cover;">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2 text-center">
-              <a href="{{ url('/kelola_akun') }}">
                 Kelola Akun
-              </a>
             </div>
             <div class="col-auto">
-              <i class="fas fa-users fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
       </div>
+      </a>
     </div>
-    <div class="col-xl-4 col-md-6 mb-4">
-      <div class="card border-left-success shadow h-100 py-2">
+    <div class="col-xl-4 col-md-6 mb-4" id="btn-kelola">
+      <a href="{{ url('kelola_raport') }}" style="color: #7102cf; font-weight: bold;">
+      <div class="card shadow h-100 py-2" style="border-left-color: #7a00e2; border-left-width: 5px; background-image: url('{{ asset('img/btn3.png') }}'); background-position: center; background-size: cover;">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2 text-center">
-              <a href="{{ url('kelola_raport') }}">
                 Kelola Raport
-              </a>
             </div>
             <div class="col-auto">
-              <i class="far fa-file-alt fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
       </div>
+      </a>
     </div>
-    <div class="col-xl-4 col-md-6 mb-4">
-      <div class="card border-left-success shadow h-100 py-2">
+    <div class="col-xl-4 col-md-6 mb-4" id="btn-kelola">
+      <a href="{{ url('kelola_kelas') }}" style="color: #7102cf; font-weight: bold;">
+      <div class="card shadow h-100 py-2" style="border-left-color: #7a00e2; border-left-width: 5px; background-image: url('{{ asset('img/btn4.png') }}'); background-position: center; background-size: cover;">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2 text-center">
-              <a href="{{ url('kelola_kelas') }}">
                 Kelola Kelas
-              </a>
             </div>
             <div class="col-auto">
-              <i class="far fa-address-card fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
       </div>
+      </a>
     </div>
     @endif
     @if(auth()->user()->role == 'Guru')
     <div class="col-xl-6 col-md-6 mb-4">
       <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
-          <div class="row no-gutters align-items-center">
+          <div class="row no-gutters authlign-items-center">
             <div class="col mr-2 text-center">
               <a href="{{ url('kelola_nilai') }}">
                 Lihat Akun
               </a>
             </div>
             <div class="col-auto">
-              <i class="fas fa-user fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
@@ -171,7 +187,6 @@
               </a>
             </div>
             <div class="col-auto">
-              <i class="fas fa-calculator fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
