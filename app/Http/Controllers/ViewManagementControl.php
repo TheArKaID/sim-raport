@@ -14,11 +14,13 @@ class ViewManagementControl extends Controller
     	return view('dashboad');
     }
 
+    //Menampilkan Data ke DataTable
     public function dataTableAkun(){
         $user = User::all();
         return view('kelola_akun.dataTableAkun', compact('user'));
     }
 
+    //Maksimal Kode Auto
     public function maksKode(){
         $max = User::max('kd_guru');
         $max4 = $max[1].$max[2].$max[3].$max[4];        

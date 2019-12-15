@@ -89,7 +89,7 @@
             <div class="form-group row">
               <label class="col-sm-4 col-form-label">Password Baru</label>
               <div class="col-sm-8">
-                <input type="password" class="form-control" name="newpassword" value="">
+                <input type="password" class="form-control" name="newpassword" value="" required="">
               </div>
             </div>
           </div>

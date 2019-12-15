@@ -24,15 +24,16 @@ Route::group(['middleware' => ['auth', 'checkRole:Guru,Kurikulum']], function(){
 	Route::post('/changepass/{id}', 'AkunController@changepass');
 });
 Route::group(['middleware' => ['auth', 'checkRole:Kurikulum']], function(){
+	Route::get('/kelasAjar/{id}', 'KelasController@t_kelas_ajar');
 	Route::get('/dataTableAkun', 'ViewManagementControl@dataTableAkun');
 	Route::get('/maksKode', 'ViewManagementControl@maksKode');
 	Route::get('/kelola_akun', 'ViewManagementControl@kelola_akun');
 	Route::post('/simpan_akun', 'AkunController@create');
 	Route::get('/detail_akun/{id}','AkunController@detail');
 	Route::get('/hapus_akun/{id}', 'AkunController@delete');
-	Route::post('/update_akun/{id}', 'AkunController@update');
-	Route::post('/detail_akun/tambah_kelas', 'AkunController@tambah_kelas');
-	Route::get('/detail_akun/hapus_kelas/{id}', 'KelasController@hapus_kelas');
+	Route::post('/update_akun/{id}/{kd_guru}', 'AkunController@update');
+	Route::post('/simpan_kelas', 'KelasController@tambah_kelas');
+	Route::get('/hapus_kelas/{id}/{kd_guru}', 'KelasController@hapus_kelas');
 });
 Route::group(['middleware' => ['auth', 'checkRole:Guru']], function(){
 	Route::get('/kelola_nilai/{kd_guru}', 'NilaiController@dashboard_nilai');

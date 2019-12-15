@@ -35,57 +35,45 @@ class AkunController extends Controller
         echo "sukses";
     }
 
-    public function detail_sample($id){
-        $user = User::find($id);
-        $mapel = Mapel::all();
-        $kelas = CrudKelas::all();
-        $t_ajar = TabelAjar::all();
-        $tingkat1 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 1)->get();
-        $tingkat2 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 2)->get();
-        $tingkat3 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 3)->get();
-        return view('kelola_akun.detail_akun', compact('user', 'mapel', 'kelas', 't_ajar', 'tingkat1', 'tingkat2', 'tingkat3'));
-    }
-
     //Lihat Akun
     public function detail($id){
         $user = User::find($id);
-        $mapel = Mapel::all();
-        $kelas = CrudKelas::all();
-        $t_ajar = TabelAjar::all();
-        $tingkat1 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 1)->get();
-        $tingkat2 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 2)->get();
-        $tingkat3 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 3)->get();
-        return response()->json($user);
+        $rombel = DB::table('rombel')->select('rombel.*')->get();
+        $rombel_ajar = DB::table('rombel')->join('kelas_ajar', 'rombel.kd_rombel', '=', 'kelas_ajar.kd_rombel')->where('kelas_ajar.kd_guru', $user->kd_guru)->select('rombel.*')->orderBy('kd_rombel', 'asc')->get();
+        $tingkat1 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 1)->orderBy('kd_rombel', 'asc')->get();
+        $tingkat2 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 2)->orderBy('kd_rombel', 'asc')->get();
+        $tingkat3 = KelasAjar::select('id', 'rombel', 'kd_rombel')->where('name', $user->name)->where('tingkat', 3)->orderBy('kd_rombel', 'asc')->get();
+        return response()->json(['user' => $user, 'tingkat1' => $tingkat1, 'tingkat2' => $tingkat2, 'tingkat3' => $tingkat3, 'rombel' => $rombel, 'rombel_ajar' => $rombel_ajar]);
     }
 
     //Update Akun
-    public function update(Request $request,$id){
+    public function update(Request $request,$id,$kd_guru){
+        DB::table('kelas_ajar')->where('kd_guru', '=', $kd_guru)->update(['mapel' => $request->mapelupdate]);
         $user = User::find($id);
-        $image = $request->avatar;
+        $image = $request->avatarupdate;
         if($image != ''){
             $user->update([
-                'kd_guru' => $request->kd_guru,
-                'name' => $request->name,
-                'email' => $request->username,
-                'role' => $request->role,
-                'mapel' => $request->mapel,
-                'avatar' => $request->avatar,
+                'name' => $request->nameupdate,
+                'email' => $request->usernameupdate,
+                'role' => $request->roleupdate,
+                'mapel' => $request->mapelupdate,
+                'avatar' => $request->avatarupdate,
             ]);
-            if($request->hasFile('avatar')){
-                $request->file('avatar')->move('picture/',$request->file('avatar')->getClientOriginalName());
-                $user->avatar = $request->file('avatar')->getClientOriginalName();
+            if($request->hasFile('avatarupdate')){
+                $request->file('avatarupdate')->move('picture/',$request->file('avatarupdate')->getClientOriginalName());
+                $user->avatar = $request->file('avatarupdate')->getClientOriginalName();
                 $user->save();
             }
         }else{
             $user->update([
-                'kd_guru' => $request->kd_guru,
-                'name' => $request->name,
-                'email' => $request->username,
-                'role' => $request->role,
-                'mapel' => $request->mapel,
+                'name' => $request->nameupdate,
+                'email' => $request->usernameupdate,
+                'role' => $request->roleupdate,
+                'mapel' => $request->mapelupdate,
             ]);
         }
-        return redirect('/detail_akun/'.$request->id)->with('status','Profil Berhasil Diubah!');
+        return response()->json($user);
+        echo "sukses";
     }
 
     //Ubah Password
@@ -95,16 +83,5 @@ class AkunController extends Controller
                 'password' => Hash::make($request['newpassword'])
             ]);
         return redirect('/dashboard')->with('status','Password Berhasil Diubah!');
-    }
-
-    //Tambah Kelas
-    public function tambah_kelas(Request $request){
-        TabelAjar::create([
-            'kd_guru' => $request['kd_guru'],
-            'kd_rombel' => $request['kd_rombel'],
-            'mapel' => $request['mapel'],
-        ]);
-
-        return redirect('/detail_akun/'.$request['id']);
     }
 }
