@@ -47,13 +47,14 @@ class KelolaSiswaController extends Controller
     // Edit Siswa
     public function edit_siswa($id)
     {
-        $data_siswa = Siswa::join('rayons', 'rayons.singkatan_rayon', '=', 'siswas.rayon')
-        ->select('siswas.*', 'rayons.rayon AS rayon_lengkap')
-        ->where('siswas.id', $id)
+        $data_siswa = Siswa::where('siswas.id', $id)
+        ->leftJoin('rayons', 'rayons.singkatan_rayon', '=', 'siswas.rayon')
+        ->select('siswas.*', 'rayons.rayon as rayon_lengkap')
         ->first();
-    	//$data_siswa = Siswa::find($id);
 
-    	return response()->json(['data_siswa' => $data_siswa]);
+    	// $data_siswas = Siswa::find($id);
+    	
+        return response()->json(['data_siswa' => $data_siswa]);
     }
 
     // Update Siswa
