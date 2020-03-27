@@ -1,0 +1,1 @@
+<input name="kd_mapel" type="text" class="form-control" id="kodeMapel" value="{{ $max4 }}" readonly>

@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'kd_guru', 'name', 'avatar', 'role', 'email', 'password', 'mapel'
+        'kd_guru', 'name', 'avatar', 'role', 'kd_mapel', 'username', 'password', 'remember_token'
     ];
 
     public function getAvatar(){

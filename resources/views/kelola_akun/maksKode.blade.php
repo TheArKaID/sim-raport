@@ -1,1 +1,0 @@
-<input type="text" class="form-control" name="kd_guru" readonly="" value="{{ $max4 }}">

@@ -1,9 +1,27 @@
 @extends('layouts/header')
+@section('css')
+<link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+<style type="text/css">
+  .backkelola{
+    color: grey;
+    text-decoration: none;
+  }
+  .backkelola:hover{
+    color: #7a00e2;
+    text-decoration: none;
+  }
+  .txt-edit{
+    display: none;
+    table-layout: fixed;
+    width: 50px;
+  }
+</style>
+@endsection
 @section('nav')
-<ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-image: url('{{ asset('images/navbg.jpg')  }}');">
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/dashboard')}}">
         <div class="sidebar-brand-icon rotate-n-15">
-          <!-- <i class="fas fa-file-alt"></i> -->
+          <img src="{{ asset('icon/icon-2.png') }}" style="width: 40px;">
         </div>
         <div class="sidebar-brand-text mx-3">SIM RAPORT</div>
       </a>
@@ -14,12 +32,12 @@
           <span>Dashboard</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url('/lihat_akun') }}">
+        <a class="nav-link" href="{{ url('/profile') }}">
           <i class="fas fa-user"></i>
-          <span>Lihat Akun</span></a>
+          <span>Profile</span></a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="{{ url('/kelola_nilai', auth()->user()->kd_guru) }}">
+        <a class="nav-link" href="{{ url('/kelola_nilai') }}">
           <i class="fas fa-calculator"></i>
           <span>Kelola Nilai</span></a>
       </li>
@@ -32,236 +50,379 @@
 @section('isi')
 <div class="container-fluid">
   <div class="row">
-    <div class="col-lg-12 mb-4"><a href="{{ url('/kelola_nilai', auth()->user()->kd_guru) }}" class="btn btn-success">Kembali</a></div>
+    <div class="col-sm-12 col-lg-12 col-md-12">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb shadow" style="background-color: #fff;">
+          <li class="breadcrumb-item"><a href="{{ url('/kelola_nilai') }}" class="backkelola">Kelola Nilai</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ $rombels->rombel }}</li>
+        </ol>
+      </nav>
+    </div>
   </div>
   <div class="row">
-    <div class="col-lg-12 mb-3">
-      <div class="card bg-success text-white shadow" id="card-welcome">
-        <div class="card-body text-center">
-          <h3>Kelola Nilai Siswa</h3>
+    <div class="col-lg-12">
+      <div class="alert" style="background-color: #d69df9; color: #fff;" role="alert">
+        * Double klik field untuk mengubah nilai
+      </div>
+    </div>
+  </div>
+  <div class="row mt-1 mb-4">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card shadow">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Daftar Nilai</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="" width="100%" cellspacing="0">
+              <thead class="text-center">
+                <tr>
+                  <th style="vertical-align: middle;" rowspan="2">No</th>
+                  <th rowspan="2" style="vertical-align: middle;">NIS</th>
+                  <th rowspan="2" style="vertical-align: middle;">Nama</th>
+                  <th rowspan="2" style="vertical-align: middle;">JK</th>
+                  <th colspan="2" style="vertical-align: middle;">UH 1</th>
+                  <th colspan="2" style="vertical-align: middle;">UH 2</th>
+                  <th colspan="2" style="vertical-align: middle;">UTS GANJIL</th>
+                  <th colspan="2" style="vertical-align: middle;">UH 3</th>
+                  <th colspan="2" style="vertical-align: middle;">UH 4</th>
+                  <th colspan="2" style="vertical-align: middle;">UAS GANJIL</th>
+                  <th colspan="2" style="vertical-align: middle;">UH 5</th>
+                  <th colspan="2" style="vertical-align: middle;">UH 6</th>
+                  <th colspan="2" style="vertical-align: middle;">UTS GENAP</th>
+                  <th colspan="2" style="vertical-align: middle;">UH 7</th>
+                  <th colspan="2" style="vertical-align: middle;">UH 8</th>
+                  <th colspan="2" style="vertical-align: middle;">UKK GENAP</th>
+                </tr>
+                <tr>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                  <th>P</th>
+                  <th>K</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($daftar_siswa as $daftar_siswa)
+                <tr>
+                  <td>{{ $loop->iteration }}</td>
+                  <td>{{ $daftar_siswa->nis }}</td>
+                  <td>{{ $daftar_siswa->nama }}</td>
+                  <td>{{ $daftar_siswa->jk }}</td>
+                  @if(\App\Semester1::select('semester1s.*')->where('nis', $daftar_siswa->nis)->count() < 1)
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_1p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_1p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_1k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_1k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_2p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_2p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_2k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_2k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uts_1p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uts_1p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uts_1k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uts_1k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_3p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_3p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_3k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_3k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_4p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_4p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_4k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_4k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uas_p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uas_p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uas_k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uas_k">
+                  </td>
+                  @else
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uh_1p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_1p') }}</div>
+                    <input type="number" max="100" data-edit="uh_1p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_1p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uh_1k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_1k') }}</div>
+                    <input type="number" max="100" data-edit="uh_1k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_1k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uh_2p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_2p') }}</div>
+                    <input type="number" max="100" data-edit="uh_2p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_2p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uh_2k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_2k') }}</div>
+                    <input type="number" max="100" data-edit="uh_2k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_2k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uts_1p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uts_1p') }}</div>
+                    <input type="number" max="100" data-edit="uts_1p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uts_1p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uts_1k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uts_1k') }}</div>
+                    <input type="number" max="100" data-edit="uts_1k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uts_1k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uh_3p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_3p') }}</div>
+                    <input type="number" max="100" data-edit="uh_3p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_3p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uh_3k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_3k') }}</div>
+                    <input type="number" max="100" data-edit="uh_3k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_3k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uh_4p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_4p') }}</div>
+                    <input type="number" max="100" data-edit="uh_4p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_4p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uh_4k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_4k') }}</div>
+                    <input type="number" max="100" data-edit="uh_4k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uh_4k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uas_p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uas_p') }}</div>
+                    <input type="number" max="100" data-edit="uas_p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uas_p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester1::select('semester1s.uas_k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uas_k') }}</div>
+                    <input type="number" max="100" data-edit="uas_k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_satu" value="" class="txt-edit semes_satu" name="uas_k">
+                  </td>
+                  @endif
+                  @if(\App\Semester2::select('semester2s.*')->where('nis', $daftar_siswa->nis)->count() < 1)
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_5p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_5p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_5k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_5k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_6p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_6p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_6k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_6k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uts_2p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uts_2p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uts_2k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uts_2k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_7p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_7p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_7k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_7k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_8p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_8p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="uh_8k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_8k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="ukk_p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="ukk_p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">Isi</div>
+                    <input type="number" max="100" data-edit="ukk_k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="ukk_k">
+                  </td>
+                  @else
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.uh_5p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_5p') }}</div>
+                    <input type="number" max="100" data-edit="uh_5p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_5p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.uh_5k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_5k') }}</div>
+                    <input type="number" max="100" data-edit="uh_5k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_5k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.uh_6p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_6p') }}</div>
+                    <input type="number" max="100" data-edit="uh_6p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_6p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.uh_6k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_6k') }}</div>
+                    <input type="number" max="100" data-edit="uh_6k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_6k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.uts_2p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uts_2p') }}</div>
+                    <input type="number" max="100" data-edit="uts_2p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uts_2p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.uts_2k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uts_2k') }}</div>
+                    <input type="number" max="100" data-edit="uts_2k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uts_2k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.uh_7p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_7p') }}</div>
+                    <input type="number" max="100" data-edit="uh_7p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_7p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.uh_7k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_7k') }}</div>
+                    <input type="number" max="100" data-edit="uh_7k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_7k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.uh_8p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_8p') }}</div>
+                    <input type="number" max="100" data-edit="uh_8p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_8p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.uh_8k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('uh_8k') }}</div>
+                    <input type="number" max="100" data-edit="uh_8k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="uh_8k">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.ukk_p')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('ukk_p') }}</div>
+                    <input type="number" max="100" data-edit="ukk_p" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="ukk_p">
+                  </td>
+                  <td>
+                    <div class="nilai-field">{{ $nilais = \App\Semester2::select('semester2s.ukk_k')->where('nis', $daftar_siswa->nis)->where('kd_rombel', $rombels->kd_rombel)->where('kd_mapel', auth()->user()->kd_mapel)->sum('ukk_k') }}</div>
+                    <input type="number" max="100" data-edit="ukk_k" data-nis="{{ $daftar_siswa->nis }}" data-rombel="{{ $daftar_siswa->kd_rombel }}" data-semes="semes_dua" value="" class="txt-edit semes_dua" name="ukk_k">
+                  </td>
+                  @endif
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-sm-4 mb-4">
-      @if($cek_kkm == 0)
-      <form method="POST" action="{{ url('/input_kkm/'.auth()->user()->kd_guru.'/'.$kd_rombel.'/'.auth()->user()->mapel) }}">
-        @csrf
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label" style="font-weight: bold;">KKM</label>
-          <div class="col-sm-4">
-            <input type="number" id="nilaiKkm" class="form-control" name="kkm">
-          </div>
-          <div class="col-sm-4">
-            <button class="btn btn-success" type="submit">Simpan</button>
-          </div>
-          <div class="col-sm-2"></div>
-        </div>
-      </form>
-      @elseif($cek_kkm > 0)
-      <form method="POST" action="{{ url('/update_kkm/'.auth()->user()->kd_guru.'/'.$kd_rombel.'/'.auth()->user()->mapel) }}">
-        @csrf
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label" style="font-weight: bold;">KKM</label>
-          <div class="col-sm-4">
-            @foreach($tampil_kkm as $kkm)
-            <input type="number" id="nilaiKkm" class="form-control" name="kkm" value="{{ $kkm->kkm }}" readonly="">
-            @endforeach
-          </div>
-          <div class="col-sm-4">
-            <button class="btn btn-success" id="editKkm" type="button">Edit</button>
-            <button class="btn btn-success" id="simpanKkm" type="submit" hidden="">Simpan</button>
-          </div>
-          <div class="col-sm-2"></div>
-        </div>
-      </form>
-      @endif
-    </div>
-    <div class="col-sm-4"></div>
-  </div>
-<!--   <div class="row">
-    <div class="modal fade" id="editContent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel"></h5>
-            <button type="button" class="close" data-dismiss="modal" id="editClose" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form method="POST" action="{{ url('/simpan_akun') }}">
-              @csrf
-              <div class="form-group row">
-                <div class="col-sm-8">
-                  <input type="text" hidden="" class="form-control" name="" id="nama">
-                  <input type="text" hidden="" class="form-control" name="" id="nis">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UH 1</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai1" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UH 2</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai2" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UTS GANJIL</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai3" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UH 3</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai4" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UH 4</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai5" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UAS GANJIL</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai6" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UH 5</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai7" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UH 6</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai8" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UTS GENAP</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai9" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UH 7</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai10" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UH 8</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai11" name="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-3 offset-sm-1 col-form-label">UKK GENAP</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" disabled="" id="nilai12" name="">
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-success btn-block" id="editBtn">Edit</button>
-                <button type="submit" class="btn btn-primary btn-block" id="updateBtn">Update</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <div class="row">
-    <div class="col-lg-12 mb-4">
-      <table class="table table-bordered" id="dataTable">
-        <thead class="text-center">
-          <tr>
-            <th scope="col" class="bg-success" style="color: #fff;">#</th>
-            <th scope="col">NIS</th>
-            <th scope="col">Nama</th>
-            <th scope="col">Rayon</th>
-            <th scope="col">Rombel</th>
-            <th scope="col">Opsi</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($daftar_siswa as $siswa)
-          <tr>
-            <th scope="row">{{ $loop->iteration }}</th>
-            <td>{{ $siswa->nis }}</td>
-            <td>{{ $siswa->nama }}</td>
-            <td>{{ $siswa->rayon }}</td>
-            <td>{{ $siswa->rombel }}</td>
-            <td class="text-center">
-              @foreach($tampil_kkm as $kkm)
-              <a href="{{ url('/kelola_nilai_siswa/'. $siswa->nis . '/' . $kd_rombel . '/' . auth()->user()->mapel.'/'.$kkm->kkm) }}" class="btn btn-primary">Kelola Nilai</a>
-              @endforeach
-            </td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
-    </div>
-  </div>
+</div>
 @endsection
 @section('script')
+<script type="text/javascript" src="{{ asset('js/jquery.js') }}"></script>
+<script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
 <script type="text/javascript">
-  $('#editKkm').click(function() {
-    $('#nilaiKkm').prop("readonly", false);
-    $('#simpanKkm').prop("hidden", false);
-    $('#editKkm').hide();
+  function cek_kkm() {
+    $('.nilai-field').filter(function(){
+      if($(this).text() == 0){
+        $(this).text('Isi');
+        $(this).css('color', 'grey');
+      }else if($(this).text() < {{ $kkms->kkm }}){
+        $(this).css('color', 'red');
+      }
+    });
+  }
+
+  cek_kkm();
+
+  $(document).ready(function(){
+
+    $('.nilai-field').click(function(){
+      var value = $(this).html();
+      $('.txt-edit').hide();
+      $(this).next('.txt-edit').show().focus();
+      if(value == 'Isi'){
+        $(this).next('.txt-edit').val('0');
+      }else{
+        $(this).next('.txt-edit').val(value);
+      }
+      $(this).hide();
+    });
+
+    $(".txt-edit").on('keyup', function (e) {
+      if(e.keyCode === 13) {
+        var field = $(this).attr('data-edit');
+        var semes = $(this).attr('data-semes');
+        var nis = $(this).attr('data-nis');
+        var kd_rombel = $(this).attr('data-rombel');
+        var kd_mapel = "{{ auth()->user()->kd_mapel }}";
+        var value = $(this).val();
+        $(this).hide();
+        $(this).prev('.nilai-field').show();
+        $(this).prev('.nilai-field').text(value);
+        $.ajax({
+          method: "GET",
+          url: "{{ url('/edit_nilai') }}/" + "{{ $daftar_siswa->nis }}" + "/" + semes + "/" + field + "/" + kd_mapel + "/" + nis + "/" + value + "/" + kd_rombel,
+          success:function(response)
+          {
+            cek_kkm();
+            Swal.fire({
+              icon: 'success',
+              text: 'Nilai berhasil diubah',
+              showConfirmButton: false,
+              timer: 1000
+            })
+          }
+        });
+       }
+    });
+
+    $(".txt-edit").focusout(function(){
+      var field = $(this).attr('data-edit');
+      var semes = $(this).attr('data-semes');
+      var nis = $(this).attr('data-nis');
+      var kd_rombel = $(this).attr('data-rombel');
+      var kd_mapel = "{{ auth()->user()->kd_mapel }}";
+      var value = $(this).val();
+      $(this).hide();
+      $(this).prev('.nilai-field').show();
+      $(this).prev('.nilai-field').text(value);
+      $.ajax({
+        method: "GET",
+        url: "{{ url('/edit_nilai') }}/" + semes + "/" + field + "/" + kd_mapel + "/" + nis + "/" + value + "/" + kd_rombel,
+        success:function(response)
+        {
+          cek_kkm();
+          Swal.fire({
+            icon: 'success',
+            text: 'Nilai berhasil diubah',
+            showConfirmButton: false,
+            timer: 1000
+          })
+        }
+      });
+    });
   });
 </script>
-<!-- <script type="text/javascript">
-  $('#editContent').on('show.bs.modal', function(e){
-      $(this).find('#nama').val($(e.relatedTarget).data('nama'));
-      $(this).find('#nis').val($(e.relatedTarget).data('nis'));
-      $('#exampleModalLabel').text($(this).find('#nis').val() +" - "+ $(this).find('#nama').val());
-      $("#updateBtn").hide();
-  });
-
-  $("#editBtn").click(function(){
-      $("#nilai1").prop("disabled", false);
-      $("#nilai2").prop("disabled", false);
-      $("#nilai3").prop("disabled", false);
-      $("#nilai4").prop("disabled", false);
-      $("#nilai5").prop("disabled", false);
-      $("#nilai6").prop("disabled", false);
-      $("#nilai7").prop("disabled", false);
-      $("#nilai8").prop("disabled", false);
-      $("#nilai9").prop("disabled", false);
-      $("#nilai10").prop("disabled", false);
-      $("#nilai11").prop("disabled", false);
-      $("#nilai12").prop("disabled", false);
-      $("#editBtn").hide();
-      $("#updateBtn").show();
-  });
-
-  $("#editClose").click(function(){
-      $("#nilai1").prop("disabled", true);
-      $("#nilai2").prop("disabled", true);
-      $("#nilai3").prop("disabled", true);
-      $("#nilai4").prop("disabled", true);
-      $("#nilai5").prop("disabled", true);
-      $("#nilai6").prop("disabled", true);
-      $("#nilai7").prop("disabled", true);
-      $("#nilai8").prop("disabled", true);
-      $("#nilai9").prop("disabled", true);
-      $("#nilai10").prop("disabled", true);
-      $("#nilai11").prop("disabled", true);
-      $("#nilai12").prop("disabled", true);
-      $("#updateBtn").hide();
-      $("#editBtn").show();
-  });
-</script> -->
 @endsection

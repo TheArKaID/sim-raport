@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>JavaScript Clock With jQuery</title>
+<!--STYLE-->
+<style type="text/css">
+#myclock{
+	font-size:18px;
+	color:#666;
+}
+</style>
+<!--BEHAVIOR-->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script language="javascript">
+
+	var clock = 0;
+	var interval_msec = 1000;
+
+	// ready
+
+	$(function() {
+		// set timer
+		clock = setTimeout("UpdateClock()", interval_msec);
+	});
+
+	// UpdateClock
+	function UpdateClock(){
+
+		// clear timer
+		clearTimeout(clock);
+
+		var asiaTime = new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"});
+		var dt_now = new Date(asiaTime);
+		var weekday = new Array(7);
+		weekday[0] = "Minggu";
+		weekday[1] = "Senin";
+		weekday[2] = "Selasa";
+		weekday[3] = "Rabu";
+		weekday[4] = "Kamis";
+		weekday[5] = "Jumat";
+		weekday[6] = "Sabtu";
+		var day = weekday[dt_now.getDay()];
+		var hh	= dt_now.getHours();
+		var mm	= dt_now.getMinutes();
+		var ss	= dt_now.getSeconds();
+
+		if(hh < 10){
+			hh = "0" + hh;
+		}
+		if(mm < 10){
+			mm = "0" + mm;
+		}
+		if(ss < 10){
+			ss = "0" + ss;
+		}
+		$("#myclock").html(day + ", " + hh + ":" + mm + ":" + ss);
+
+		// set timer
+		clock = setTimeout("UpdateClock()", interval_msec);
+
+	}
+	</script>
+</head>
+
+<!--STRUCTURE-->
+<body>
+	client side : <span id="myclock">time</span>
+</body>
+</html>
