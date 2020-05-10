@@ -125,6 +125,12 @@
       timer: 1500
     })
     @endif
+
+    $(document).ready(function(){
+      $(document).on( 'focus', ':input', function(){
+          $( this ).attr( 'autocomplete', 'off' );
+      });
+    });
   </script>
 </body>
 </html>

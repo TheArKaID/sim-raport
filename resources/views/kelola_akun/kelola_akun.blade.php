@@ -145,7 +145,7 @@
       <a href="#" role="button" class="btn btn-sm shadow-sm" style="color: #fff; background-color: #b854f5;" data-toggle="modal" data-target="#saveModal"><i class="fas fa fa-plus fa-sm text-white-50"></i> Tambah Data</a>
     </div>
     <div class="modal fade" id="tambahMapelModal" tabindex="-1" role="dialog" aria-labelledby="tambahMapelModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="tambahMapelModalLabel">Tambah Mapel</h5>
